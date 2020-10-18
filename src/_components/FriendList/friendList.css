@@ -1,0 +1,18 @@
+.list__link {
+  color: white;
+  padding: 0.5em 1em;
+}
+
+.list__link:hover {
+  background: rgb(21, 115, 146);
+}
+
+.list__link--with-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.list__link--with-avatar .avatar {
+  margin-right: 20px;
+}

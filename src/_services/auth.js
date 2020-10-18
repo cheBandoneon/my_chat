@@ -1,5 +1,5 @@
-import axios from 'axios';
-import {OAUTH} from '../constants';
+import axios    from 'axios';
+import {OAUTH}  from '../constants';
 
 
 export const getAuth0Token = () => {
@@ -10,6 +10,10 @@ export const getAuth0Token = () => {
 export const setAuth0Token = (token) => {
   localStorage.setItem('my_chat_auth0_token', token);
   return getAuth0Token();
+}
+
+export const removeAuth0Token = () => {
+  localStorage.removeItem('my_chat_auth0_token');
 }
 
 export const fetchAuth0Token = async () => {

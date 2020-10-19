@@ -1,6 +1,6 @@
-import axios                            from 'axios';
-import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS}  from '../constants';
-import {getAuth0Token, fetchAuth0Token, removeAuth0Token}  from './auth';
+import axios                                              from 'axios';
+import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS}       from '../constants';
+import {getAuth0Token, fetchAuth0Token, removeAuth0Token} from './auth';
 
 export const fetchUserByEmail = async ( email ) => {
   try {
@@ -20,13 +20,15 @@ export const fetchAuth0Credentials = async () => {
   }
 }
 
-export const fetchUsersByEmails = async ( emails, tries = 1 ) => {
+export const fetchUsersByEmails = async ( friendItems, tries = 1 ) => {
   
   // If tried to fetch unsuccessfully more than 2 times then bail.
   if( tries > 2 ) {
     return false;
   }
 
+  const emails = friendItems.map( item => item.email );
+  
   const token = getAuth0Token() || await fetchAuth0Token();
   const config = {
     method: 'GET',

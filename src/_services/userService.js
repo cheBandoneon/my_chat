@@ -1,6 +1,6 @@
-import axios from 'axios';
-import {GET_USER, GET_USERS_BY_EMAILS} from '../constants';
-import {getAuth0Token,fetchAuth0Token} from './auth';
+import axios                                              from 'axios';
+import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS}       from '../constants';
+import {getAuth0Token, fetchAuth0Token, removeAuth0Token} from './auth';
 
 export const fetchUserByEmail = async ( email ) => {
   try {
@@ -11,7 +11,24 @@ export const fetchUserByEmail = async ( email ) => {
   }
 }
 
-export const fetchUsersByEmails = async ( emails ) => {
+export const fetchAuth0Credentials = async () => {
+  try {
+    const response = await axios.get(`${AUTH0_CREDS}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const fetchUsersByEmails = async ( friendItems, tries = 1 ) => {
+  
+  // If tried to fetch unsuccessfully more than 2 times then bail.
+  if( tries > 2 ) {
+    return false;
+  }
+
+  const emails = friendItems.map( item => item.email );
+  
   const token = getAuth0Token() || await fetchAuth0Token();
   const config = {
     method: 'GET',
@@ -24,9 +41,11 @@ export const fetchUsersByEmails = async ( emails ) => {
 
   try {
     const response = await axios(config);
-    console.log(response.data);
     return response.data ? response.data : '';
   } catch (error) {
-    console.error(error);
+    // Most errors at this stage are probably due to invalid token. So clear the Token from Local Storage
+    // and fetch again
+    removeAuth0Token();
+    fetchUsersByEmails(emails, ++tries);
   }
 }

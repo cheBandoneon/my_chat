@@ -1,7 +1,14 @@
 .chat-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
   position: relative;
-  width: 100%;
+  width: 85%;
+  margin-left: 15%;
   height: 100%;
+  padding: 30px;
 }
 
 .chat-sidebar {

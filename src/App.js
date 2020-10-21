@@ -6,6 +6,7 @@ import Chat                             from './_components/Chat/Chat';
 import Sidebar                          from './_components/Sidebar/Sidebar';
 import Conversation                     from './_components/Conversation/Conversation';
 import { fetchUserByEmail }             from './_services/userService';
+import PrivateRoute                     from './_components/PrivateRoute/PrivateRoute';
 import _                                from 'lodash';
 import './App.css';
 
@@ -23,17 +24,22 @@ function App() {
   const getSingleUser = async () => {
     setLocalUser( await fetchUserByEmail(user.email) );
   };
-
+ 
   return (
     <div className="App">
       <Sidebar user={localUser}></Sidebar>
       <Switch>
-        <Route path="/" exact>
-          <Chat 
-            user={localUser}
-          />
-        </Route>
-        <Route path="/messages/:conversation_id" render={(props) => <Conversation {...props} currentUser={localUser} />} />
+        <PrivateRoute 
+          path="/" 
+          isLogin={user} 
+          exact 
+          component={() => <Chat user={localUser} /> } 
+        />
+        <PrivateRoute 
+          path="/messages/:conversation_id"
+          isLogin={user}
+          component={(props) => <Conversation {...props} currentUser={localUser} />} 
+        />
         <Route path="/login">
           <Login />
         </Route>

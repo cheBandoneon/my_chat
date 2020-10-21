@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link}                       from 'react-router-dom'
+import {NavLink}                       from 'react-router-dom'
 import Avatar                       from '../Avatar/Avatar';
 import {fetchUsersByEmails}         from '../../_services/userService';
 import _                            from 'lodash';
@@ -31,10 +31,10 @@ function FriendList(props) {
         let localUserID = _.find(friendItems, ['email', item.email]).id;
         return(
           <li className="list__item" key={localUserID} id={localUserID}>
-            <Link to={`/messages/${getConversationIdFromFriendId(localUserID)}`} className="list__link list__link--with-avatar">
+            <NavLink to={`/messages/${getConversationIdFromFriendId(localUserID)}`} className="list__link list__link--with-avatar">
               <Avatar url={item.picture} />
               <span className="list-item__text">{item.nickname}</span>
-            </Link>
+            </NavLink>
           </li>
         )
       })

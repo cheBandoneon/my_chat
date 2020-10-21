@@ -3,7 +3,8 @@
   padding: 0.5em 1em;
 }
 
-.list__link:hover {
+.list__link:hover, 
+.list__link.active {
   background: rgb(21, 115, 146);
 }
 

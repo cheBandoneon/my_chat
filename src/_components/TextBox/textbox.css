@@ -1,0 +1,13 @@
+.chat-form {
+
+}
+
+.chat-form__textarea {
+  border: 2px solid #002c58;
+  border-radius: 5px;
+  margin-top: 2em;
+  height: 150px;
+  padding: 1.5em;
+  resize: none;
+  width: 100%;
+}

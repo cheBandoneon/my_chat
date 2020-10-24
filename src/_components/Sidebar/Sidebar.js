@@ -2,6 +2,7 @@ import React      from 'react';
 import FriendList from '../FriendList/FriendList';
 import {Link}     from 'react-router-dom';
 import _          from 'lodash';
+import './sidebar.css';
 
 function Sidebar(props) {
 

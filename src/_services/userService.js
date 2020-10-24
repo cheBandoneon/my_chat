@@ -32,7 +32,7 @@ export const fetchUsersByEmails = async ( friendItems, tries = 1 ) => {
   const token = getAuth0Token() || await fetchAuth0Token();
   const config = {
     method: 'GET',
-    headers: {'Authorization': `Bearer ${token}`},
+    headers: {'Authorization': `Bearer ${await token}`},
     url: GET_USERS_BY_EMAILS,
     params: {
       emails: emails.join()

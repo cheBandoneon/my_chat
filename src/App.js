@@ -4,7 +4,6 @@ import { useAuth0 }                     from '@auth0/auth0-react';
 import Login                            from './_components/Login/Login.js';
 import Chat                             from './_components/Chat/Chat';
 import Sidebar                          from './_components/Sidebar/Sidebar';
-import Conversation                     from './_components/Conversation/Conversation';
 import Loading                          from './_components/Loading/Loading';
 import { fetchUserByEmail }             from './_services/userService';
 import PrivateRoute                     from './_components/PrivateRoute/PrivateRoute';
@@ -19,6 +18,7 @@ function App() {
   useEffect( () => {
     if( user ) {
       getSingleUser();
+      return () => false
     }
   }, [user]);
 
@@ -33,23 +33,23 @@ function App() {
   return (
     <div className="App">
       <Sidebar user={localUser}></Sidebar>
-        <Switch>
-          <PrivateRoute 
-            path="/" 
-            isLogin={isAuthenticated} 
-            exact 
-            component={() => <Chat user={localUser} /> } 
-          />
-          <PrivateRoute 
-            path="/messages/:conversation_id"
-            isLogin={isAuthenticated}
-            component={(props) => <Conversation {...props} currentUser={localUser} />} 
-          />
-          <Route path="/login">
-            <Login />
-          </Route>
-        </Switch>
-
+      <Switch>
+        <PrivateRoute 
+          path="/" 
+          isLogin={isAuthenticated} 
+          exact 
+        >
+          <h1>My chat</h1>
+        </PrivateRoute>
+        <PrivateRoute 
+          path="/messages/:conversation_id"
+          isLogin={isAuthenticated}
+          component={(props) =><Chat {...props} currentUser={localUser} />} 
+        />
+        <Route path="/login">
+          <Login />
+        </Route>
+      </Switch>
     </div>
   )  
 }

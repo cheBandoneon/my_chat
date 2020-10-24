@@ -1,0 +1,19 @@
+.chat__messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: relative;
+  height: 100%;
+}
+
+.chat__message {
+  border-radius: 10px;
+  background: lightblue;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+
+.chat__message--right {
+  margin-left: auto;
+}

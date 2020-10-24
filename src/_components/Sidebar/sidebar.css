@@ -1,0 +1,14 @@
+.chat-sidebar {
+  background: #002c58;
+  color: white;
+  height: 100%;
+  left: 0;
+  padding: 2em 0;
+  position: fixed;
+  width: 15%;
+}
+
+.chat-sidebar .title {
+  padding: 0 1em;
+  text-align: left;
+}

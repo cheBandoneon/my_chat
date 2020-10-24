@@ -1,27 +1,10 @@
 .chat-wrapper {
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-start;
-  position: relative;
-  width: 85%;
-  margin-left: 15%;
   height: 100%;
   padding: 30px;
+  width: 85%;
+  margin-left: 15%;
 }
 
-.chat-sidebar {
-  background: #002c58;
-  color: white;
-  height: 100%;
-  left: 0;
-  padding: 2em 0;
-  position: fixed;
-  width: 15%;
-}
-
-.chat-sidebar .title {
-  padding: 0 1em;
-  text-align: left;
-}

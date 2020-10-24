@@ -1,5 +1,5 @@
 import axios                                              from 'axios';
-import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS}       from '../constants';
+import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS, SEARCH_USERS}       from '../constants';
 import {getAuth0Token, fetchAuth0Token, removeAuth0Token} from './auth';
 
 export const fetchUserByEmail = async ( email ) => {
@@ -14,6 +14,15 @@ export const fetchUserByEmail = async ( email ) => {
 export const fetchAuth0Credentials = async () => {
   try {
     const response = await axios.get(`${AUTH0_CREDS}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const searchUsers = async (searchQuery) => {
+  try {
+    const response = await axios.get(`${SEARCH_USERS}?query=${searchQuery}`);
     return response.data;
   } catch (error) {
     console.log(error);

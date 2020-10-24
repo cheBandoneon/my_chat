@@ -1,5 +1,5 @@
 import axios                              from 'axios';
-import {GET_MESSAGES, POST_MESSAGE}   from '../constants';
+import {GET_CONVERSATION, GET_MESSAGES, POST_MESSAGE}   from '../constants';
 
 export const fetchMessages = async ( conversationID ) => {
   try {
@@ -10,24 +10,32 @@ export const fetchMessages = async ( conversationID ) => {
   }
 }
 
-export const postMessage = async ( conversationID, message, authorID ) => {
-  console.log(authorID);
+export const fetchConversation = async ( conversationID ) => {
+  try {
+    const response = await axios.get(`${GET_CONVERSATION}?id=${conversationID}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const postMessage = async ( conversationID, message, fromEmail, toEmail ) => {
   try {
     const config = {
       method: 'POST',
       url: POST_MESSAGE,
-      params: {
-        conv_id: conversationID
-      },
       data: {
         message: {
-          author_id: authorID,
+          conversation_id: conversationID,
+          from: fromEmail,
+          to: toEmail,
           content: message
         }
       }
     };
 
-    return await axios(config);
+    const res = await axios(config);
+    return res.data;
   }
   catch(error) {
     console.log(error);

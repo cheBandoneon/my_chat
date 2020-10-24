@@ -1,9 +1,10 @@
-import React from 'react';  
+import React from 'react';
+import Message from '../Message/Message';  
 import './messages.css';
 
 function Messages(props) {
  
-  const {messages, currentUser} = props;
+  const {messages, currentUser, otherUser} = props;
 
   return (
     <div className="chat__messages">
@@ -11,7 +12,8 @@ function Messages(props) {
         messages && currentUser
         ? 
           messages.map( (message) => {
-            return <div className={`chat__message ${ message.author_id === currentUser._id ? 'chat__message--right' : ''}`} key={message._id}>{message.content}</div>
+            const authorIsCurrentUser = (message.from === currentUser.email);
+            return <Message author={ authorIsCurrentUser ? currentUser : otherUser } authorIsCurrentUser={authorIsCurrentUser} message={message} />
           })
         :
         ''

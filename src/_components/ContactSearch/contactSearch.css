@@ -1,0 +1,33 @@
+.contacts-search {
+  position: relative;
+  margin: 1em;
+}
+
+.contacts-search__input {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid white;
+  color: white;
+  display: block;
+  padding: .5em;
+  width: 100%;
+}
+
+.contacts-search__input:focus {
+  outline: none;
+}
+
+.contacts-search__input::placeholder {
+  color: white;
+}
+
+.contacts-search__results {
+  background: rgba(255,255,255,.95);
+  border-radius: 5px;
+  color: black;
+  display: block;
+  padding: 1em;
+  position: absolute;
+  top: 120%;
+  width: 100%;
+}

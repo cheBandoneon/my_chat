@@ -1,0 +1,17 @@
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: .5em 1em;
+  text-align: center;
+}
+
+.btn--border {
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+}
+
+.btn--border:hover {
+  background: white;
+  color: #002c58;
+}

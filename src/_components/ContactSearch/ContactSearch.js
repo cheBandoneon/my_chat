@@ -3,8 +3,8 @@ import {debounce}                   from 'throttle-debounce';
 import {searchUsers}                from '../../_services/userService';
 import './contactSearch.css';
 
-function ContactSearch() {
-
+function ContactSearch(props) {
+  const { onAddContact } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -35,7 +35,7 @@ function ContactSearch() {
               ? 
                 searchResults.map( item => {
                   return (
-                    <div> { item.email } </div>
+                    <div> <a href="#" onClick={ e => onAddContact( item.email ) }>{ item.email }</a></div>
                   )
                 })
               :
@@ -45,7 +45,6 @@ function ContactSearch() {
         :
           ''
       }
-     
     </div>
   )
 }

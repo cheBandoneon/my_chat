@@ -1,6 +1,5 @@
 import axios                                              from 'axios';
 import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS, SEARCH_USERS}       from '../constants';
-import {getAuth0Token, fetchAuth0Token, removeAuth0Token} from './auth';
 
 export const fetchUserByEmail = async ( email ) => {
   try {
@@ -29,32 +28,14 @@ export const searchUsers = async (searchQuery) => {
   }
 }
 
-export const fetchUsersByEmails = async ( friendItems, tries = 1 ) => {
-  
-  // If tried to fetch unsuccessfully more than 2 times then bail.
-  if( tries > 2 ) {
-    return false;
-  }
+export const fetchUsersByEmails = async ( emails ) => {
 
-  const emails = friendItems.map( item => item.email );
+  if( emails.length == 0 ) return;
   
-  const token = getAuth0Token() || await fetchAuth0Token();
-  const config = {
-    method: 'GET',
-    headers: {'Authorization': `Bearer ${await token}`},
-    url: GET_USERS_BY_EMAILS,
-    params: {
-      emails: emails.join()
-    }
-  };
-
   try {
-    const response = await axios(config);
+    const response = await axios.get(`${GET_USERS_BY_EMAILS}?emails=${emails.join()}`);
     return response.data ? response.data : '';
   } catch (error) {
-    // Most errors at this stage are probably due to invalid token. So clear the Token from Local Storage
-    // and fetch again
-    removeAuth0Token();
-    fetchUsersByEmails(emails, ++tries);
+    console.log(error);
   }
 }

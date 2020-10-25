@@ -16,21 +16,21 @@ function App() {
   const [ localUser, setLocalUser ] = useState('');
 
   useEffect( () => {
-    if( user ) {
+    if( isAuthenticated ) {
       getSingleUser();
       return () => false
     }
-  }, [user]);
+  }, [isAuthenticated]);
 
   const getSingleUser = async () => {
     setLocalUser( await fetchUserByEmail(user.email) );
   };
- 
-  if ( isLoading ) {  
-    return <Loading />
-  }
   
   return (
+    isLoading || ! localUser 
+    ?
+      <Loading />
+    :
     <div className="App">
       <Sidebar user={localUser}></Sidebar>
       <Switch>

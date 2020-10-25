@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {fetchMessages, postMessage, fetchConversation} from '../../_services/messagesService';
-import {fetchUsersByEmails}           from '../../_services/userService';
-import Messages                     from '../Messages/Messages';
-import TextBox                      from '../TextBox/TextBox';
+import React, {useEffect, useState}                     from 'react';
+import {fetchMessages, postMessage, fetchConversation}  from '../../_services/messagesService';
+import {fetchUsersByEmails}                             from '../../_services/userService';
+import Messages                                         from '../Messages/Messages';
+import TextBox                                          from '../TextBox/TextBox';
 import './chat.css';
 
 function Chat(props) {
@@ -11,17 +11,33 @@ function Chat(props) {
   const {currentUser} = props;
   const [messages, setMessages] = useState([]);
   const [otherUser, setOtherUser] = useState({});
+  const [conversation, setConversation] = useState('');
 
   useEffect( () => {
     getMessages();
-    getOtherUser();
-  }, [conversationID]);
+  }, []);
+
+  useEffect( () => {
+    getConversation(); 
+  },[]);
+
+  useEffect( () => {
+    getOtherUser();    
+    return () => false;
+  }, [conversation]);
+
+  const getConversation = async () => {
+    setConversation( await fetchConversation(conversationID) );
+  }
 
   const getOtherUser = async () => {
-    const conversation    = await fetchConversation(conversationID);
-    const otherUserEmail  = conversation.people[0] === currentUser.email ? conversation.people[1] : conversation.people[0];
-    const otherUser = await fetchUsersByEmails([{ email: otherUserEmail }]);
-    setOtherUser( otherUser[0] );
+
+    if ( ! conversation ) return ;
+
+    const otherUserEmail  = conversation.people[0] === currentUser.email ? conversation.people[1] : conversation.people[0];  
+    const otherUser = await fetchUsersByEmails([ otherUserEmail ]);
+    
+    setOtherUser( otherUser[0] );    
   }
   
   const getMessages = async () => {

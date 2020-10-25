@@ -13,7 +13,7 @@ function Messages(props) {
         ? 
           messages.map( (message) => {
             const authorIsCurrentUser = (message.from === currentUser.email);
-            return <Message author={ authorIsCurrentUser ? currentUser : otherUser } authorIsCurrentUser={authorIsCurrentUser} message={message} />
+            return <Message author={ authorIsCurrentUser ? currentUser : otherUser } key={message._id} authorIsCurrentUser={authorIsCurrentUser} message={message} />
           })
         :
         ''

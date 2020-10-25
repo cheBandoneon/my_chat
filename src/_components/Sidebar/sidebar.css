@@ -8,6 +8,10 @@
   width: 15%;
 }
 
+.chat-sidebar__group {
+  margin-bottom: 2em;
+}
+
 .chat-sidebar .title {
   padding: 0 1em;
   text-align: left;

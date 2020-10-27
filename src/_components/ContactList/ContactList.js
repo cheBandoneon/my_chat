@@ -1,18 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {NavLink}                       from 'react-router-dom'
+import {NavLink}                    from 'react-router-dom'
 import Avatar                       from '../Avatar/Avatar';
 import {fetchUsersByEmails}         from '../../_services/userService';
+import Pusher                       from 'pusher-js';
 import _                            from 'lodash';
 import './contactList.css';
 
 function ContactList(props) {
 
-  const { conversations } = props;
+  const { conversations, pusherKey } = props;
   const [ currentUserContacts, setCurrentUserContacts ] = useState('');
+  const [ unreadMessages, setUnReadMessages] = useState([]);
 
   useEffect( () => {
     if( conversations ) {
       getCurrentUserContacts();
+      // const pusher = new Pusher(pusherKey, {
+      //   cluster: 'eu'
+      // });
+      // const channel = pusher.subscribe(`chat_${currentUser.email}`);
+      // channel.bind('message', data => {
+        
+      // });
     }
   }, [conversations]);
 

@@ -29,10 +29,10 @@ function Sidebar(props) {
       <div className="chat-sidebar__group">
       <h3 className="title title--medium">Your Contacts</h3>
       {
-        ! _.isEmpty(user)
+        ! _.isEmpty(user.conversations)
         ?
         
-          <ContactList friendItems={user.friends} conversations={user.conversations}/>
+          <ContactList friendItems={user.friends} pusherKey={props.pusherKey} conversations={user.conversations}/>
         
         :
         'You don\'t have any contacts yet..'

@@ -3,23 +3,38 @@ import {fetchMessages, postMessage, fetchConversation}  from '../../_services/me
 import {fetchUsersByEmails}                             from '../../_services/userService';
 import Messages                                         from '../Messages/Messages';
 import TextBox                                          from '../TextBox/TextBox';
+import Pusher                                           from 'pusher-js';
 import './chat.css';
 
 function Chat(props) {
   
   const conversationID = props.match.params.conversation_id;
-  const {currentUser} = props;
+  const {currentUser, pushedMessage, pusherKey} = props;
   const [messages, setMessages] = useState([]);
   const [otherUser, setOtherUser] = useState({});
   const [conversation, setConversation] = useState('');
 
   useEffect( () => {
     getMessages();
-  }, []);
+  }, [conversationID]);
 
   useEffect( () => {
     getConversation(); 
   },[]);
+
+  useEffect( () => {
+    if( messages.length > 0 ) {
+      const pusher = new Pusher(pusherKey, {
+        cluster: 'eu'
+      });
+      const channel = pusher.subscribe(`chat_${currentUser.email}`);
+      channel.bind('message', data => {
+        setMessages([...messages, data.message]);
+      });
+
+      return () => false;
+    }
+  },[messages]);
 
   useEffect( () => {
     getOtherUser();    

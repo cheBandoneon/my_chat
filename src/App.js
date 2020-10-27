@@ -14,6 +14,7 @@ function App() {
 
   const { user, isAuthenticated, isLoading  } = useAuth0();
   const [ localUser, setLocalUser ] = useState('');
+  const PusherKey = 'f7139a406e2944f4211f';
 
   useEffect( () => {
     if( isAuthenticated ) {
@@ -27,30 +28,34 @@ function App() {
   };
   
   return (
-    isLoading || ! localUser 
+    isLoading
     ?
       <Loading />
     :
-    <div className="App">
-      <Sidebar user={localUser}></Sidebar>
-      <Switch>
-        <PrivateRoute 
-          path="/" 
-          isLogin={isAuthenticated} 
-          exact 
-        >
-          <h1>My chat</h1>
-        </PrivateRoute>
-        <PrivateRoute 
-          path="/messages/:conversation_id"
-          isLogin={isAuthenticated}
-          component={(props) =><Chat {...props} currentUser={localUser} />} 
-        />
-        <Route path="/login">
-          <Login />
-        </Route>
-      </Switch>
-    </div>
+    (
+      localUser ? 
+      <div className="App">
+        <Sidebar user={localUser} pusherKey={PusherKey}></Sidebar>
+        <Switch>
+          <PrivateRoute 
+            path="/" 
+            isLogin={isAuthenticated} 
+            exact 
+          >
+            <h1>My chat</h1>
+          </PrivateRoute>
+          <PrivateRoute 
+            path="/messages/:conversation_id"
+            isLogin={isAuthenticated}
+            component={(props) =><Chat {...props} pusherKey={PusherKey} currentUser={localUser} />} 
+          />
+        </Switch>
+      </div>
+      : 
+      <Route path="/login">
+        <Login />
+      </Route>
+    )
   )  
 }
 

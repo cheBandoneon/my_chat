@@ -3,6 +3,23 @@
   padding: 0.5em 1em;
 }
 
+.list__item {
+  position: relative;
+}
+
+.list__item--unread:after {
+  content: '';
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background: orange;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+}
+
 .list__link:hover, 
 .list__link.active {
   background: rgb(21, 115, 146);

@@ -9,3 +9,5 @@ export const OAUTH                = `${api}/oauth`;
 export const AUTH0_CREDS          = `${api}/auth0-credentials`;
 export const POST_MESSAGE         = `${api}/messages`;
 export const SEARCH_USERS         = `${api}/search-users`;
+
+export const ACCESS_TOKEN_NAME    = 'mychat_access';

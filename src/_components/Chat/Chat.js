@@ -8,44 +8,47 @@ import './chat.css';
 
 function Chat(props) {
   
-  const conversationID = props.match.params.conversation_id;
-  const {currentUser, pushedMessage, pusherKey} = props;
-  const [messages, setMessages] = useState([]);
-  const [otherUser, setOtherUser] = useState({});
+  const conversationID                  = props.match.params.conversation_id;
+  const {currentUser, pusherKey}        = props;
+  const [messages, setMessages]         = useState([]);
+  const [otherUser, setOtherUser]       = useState({});
   const [conversation, setConversation] = useState('');
+  const pusher                          = new Pusher(pusherKey, { cluster: 'eu' });
+  const channel                         = pusher.subscribe(`chat_${currentUser.email}`);
 
   useEffect( () => {
-    getMessages();
-  }, [conversationID]);
-
-  useEffect( () => {
-    getConversation(); 
+    setConversationToState(); 
   },[]);
 
+  // After subscription succeeds, get messages history
   useEffect( () => {
-    if( messages.length > 0 ) {
-      const pusher = new Pusher(pusherKey, {
-        cluster: 'eu'
-      });
-      const channel = pusher.subscribe(`chat_${currentUser.email}`);
+    if( conversationID ) {
+      channel.bind('pusher:subscription_succeeded', setMessageHistoryToState);
+      return () => false;
+    }
+  }, [conversationID]);
+
+  // Once messages are loaded, bind message event to channel.
+  useEffect( () => {
+    if( messages.length > 0 ) { 
       channel.bind('message', data => {
         setMessages([...messages, data.message]);
       });
-
       return () => false;
     }
   },[messages]);
 
+  // Get the other user of the conversation
   useEffect( () => {
-    getOtherUser();    
+    setOtherUserToState();    
     return () => false;
   }, [conversation]);
 
-  const getConversation = async () => {
+  const setConversationToState = async () => {
     setConversation( await fetchConversation(conversationID) );
   }
 
-  const getOtherUser = async () => {
+  const setOtherUserToState = async () => {
 
     if ( ! conversation ) return ;
 
@@ -55,7 +58,7 @@ function Chat(props) {
     setOtherUser( otherUser[0] );    
   }
   
-  const getMessages = async () => {
+  const setMessageHistoryToState = async () => {
     setMessages( await fetchMessages(conversationID) );
   }
 

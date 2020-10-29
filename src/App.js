@@ -1,5 +1,5 @@
 import React, { useState, useEffect }   from 'react';
-import { Route, Switch }                from "react-router-dom";
+import { Route, Switch, Redirect }                from "react-router-dom";
 import { useAuth0 }                     from '@auth0/auth0-react';
 import Login                            from './_components/Login/Login.js';
 import Chat                             from './_components/Chat/Chat';
@@ -12,28 +12,35 @@ import './App.css';
 
 function App() {
 
-  const { user, isAuthenticated, isLoading  } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const [ localUser, setLocalUser ] = useState('');
+  const [ loginComplete, setLoginComplete] = useState(false);
   const PusherKey = 'f7139a406e2944f4211f';
 
   useEffect( () => {
-    if( isAuthenticated ) {
+    if( ! isLoading ) {
       getSingleUser();
       return () => false
     }
-  }, [isAuthenticated]);
+  }, [isLoading]);
+
+  useEffect( () => {
+    if( localUser ) { // Means we tried setting a user
+      setLoginComplete(true);
+      return () => false
+    }
+  }, [localUser]);
 
   const getSingleUser = async () => {
-    setLocalUser( await fetchUserByEmail(user.email) );
+    const email = user ? user.email : '';
+    setLocalUser( await fetchUserByEmail(email) );
   };
   
   return (
-    isLoading
+    ! loginComplete 
     ?
       <Loading />
     :
-    (
-      localUser ? 
       <div className="App">
         <Sidebar user={localUser} pusherKey={PusherKey}></Sidebar>
         <Switch>
@@ -44,6 +51,9 @@ function App() {
           >
             <h1>My chat</h1>
           </PrivateRoute>
+          <Route path="/login">
+            <Login />
+          </Route>
           <PrivateRoute 
             path="/messages/:conversation_id"
             isLogin={isAuthenticated}
@@ -51,11 +61,6 @@ function App() {
           />
         </Switch>
       </div>
-      : 
-      <Route path="/login">
-        <Login />
-      </Route>
-    )
   )  
 }
 

@@ -32,7 +32,7 @@ function Sidebar(props) {
         ! _.isEmpty(user.conversations)
         ?
         
-          <ContactList friendItems={user.friends} pusherKey={props.pusherKey} conversations={user.conversations}/>
+          <ContactList friendItems={user.friends} pusherKey={props.pusherKey} user={user} conversations={user.conversations}/>
         
         :
         'You don\'t have any contacts yet..'

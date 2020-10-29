@@ -4,9 +4,9 @@ import {GET_USER, GET_USERS_BY_EMAILS, AUTH0_CREDS, SEARCH_USERS}       from '..
 export const fetchUserByEmail = async ( email ) => {
   try {
     const response = await axios.get(`${GET_USER}?email=${email}`);
-    return response.data ? response.data : '';
+    return response.data ? response.data : {};
   } catch (error) {
-    console.error(error);
+    return {};
   }
 }
 

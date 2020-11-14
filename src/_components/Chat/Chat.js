@@ -3,50 +3,61 @@ import {fetchMessages, postMessage, fetchConversation}  from '../../_services/me
 import {fetchUsersByEmails}                             from '../../_services/userService';
 import Messages                                         from '../Messages/Messages';
 import TextBox                                          from '../TextBox/TextBox';
-import Pusher                                           from 'pusher-js';
 import './chat.css';
 
 function Chat(props) {
   
   const conversationID                  = props.match.params.conversation_id;
-  const {currentUser, pusherKey}        = props;
+  const {currentUser, pusher}        = props;
   const [messages, setMessages]         = useState([]);
   const [otherUser, setOtherUser]       = useState({});
   const [conversation, setConversation] = useState('');
-  const pusher                          = new Pusher(pusherKey, { cluster: 'eu' });
-  const channel                         = pusher.subscribe(`chat_${currentUser.email}`);
 
+  // On mount get Conversation and add to state
   useEffect( () => {
     setConversationToState(); 
   },[]);
 
-  // After subscription succeeds, get messages history
-  useEffect( () => {
-    if( conversationID ) {
-      channel.bind('pusher:subscription_succeeded', setMessageHistoryToState);
-      return () => false;
-    }
-  }, [conversationID]);
+  const setConversationToState = async () => {
+    setConversation( await fetchConversation(conversationID) );
+  }
 
-  // Once messages are loaded, bind message event to channel.
+  // After conversation is fetched, initialize channel
   useEffect( () => {
-    if( messages.length > 0 ) { 
-      channel.bind('message', data => {
-        setMessages([...messages, data.message]);
-      });
+    if( conversationID) {
+      initChannel();
       return () => false;
     }
-  },[messages]);
+  }, [messages,conversationID]);
+
+  // Channel initialization
+  const initChannel = async () => {
+    
+    // Subscribe to pusher Channel
+    const channel = pusher.subscribe(`chat_${currentUser.email}`);
+
+    // After subscription succeeds, fetch conversation messages from server and add them to state 
+    await channel.bind('pusher:subscription_succeeded', setMessageHistoryToState);
+
+    // Finally bind message event 
+    channel.bind('message', onMessageSend);
+  }
+
+  // Fetch messages and add them to state
+  const setMessageHistoryToState = async () => {
+    setMessages( await fetchMessages(conversationID) );
+  }
+
+  // Update state with new message
+  const onMessageSend = (data) => {
+    setMessages([...messages, data.message]);
+  }
 
   // Get the other user of the conversation
   useEffect( () => {
     setOtherUserToState();    
     return () => false;
   }, [conversation]);
-
-  const setConversationToState = async () => {
-    setConversation( await fetchConversation(conversationID) );
-  }
 
   const setOtherUserToState = async () => {
 
@@ -56,10 +67,6 @@ function Chat(props) {
     const otherUser = await fetchUsersByEmails([ otherUserEmail ]);
     
     setOtherUser( otherUser[0] );    
-  }
-  
-  const setMessageHistoryToState = async () => {
-    setMessages( await fetchMessages(conversationID) );
   }
 
   const sendMessage = async (message) => {

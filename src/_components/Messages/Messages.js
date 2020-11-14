@@ -5,7 +5,7 @@ import './messages.css';
 function Messages(props) {
  
   const {messages, currentUser, otherUser} = props;
-
+  
   return (
     <div className="chat__messages">
       {

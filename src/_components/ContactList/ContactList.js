@@ -11,19 +11,23 @@ function ContactList(props) {
   const { conversations, pusherKey, user } = props;
   const [ currentUserContacts, setCurrentUserContacts ] = useState('');
   const [ unreadMessages, setUnReadMessages] = useState([]);
+  const pusher = new Pusher(pusherKey, {
+    //cluster: 'eu'
+  });
+  const channel = pusher.subscribe(`chat_${user.email}`);
 
   useEffect( () => {
     if( conversations ) {
       getCurrentUserContacts();
-      const pusher = new Pusher(pusherKey, {
-        cluster: 'eu'
-      });
-      const channel = pusher.subscribe(`chat_${user.email}`);
       channel.bind('message', data => {
         setUnReadMessages([...unreadMessages, data.message.conversation_id]);
       });
     }
   }, [conversations]);
+
+  useEffect( () => {
+    getActiveConversationID();
+  }, [currentUserContacts]);
 
   const getCurrentUserContacts = async () => {
     const emails = mapConversationsToEmails();
@@ -36,6 +40,10 @@ function ContactList(props) {
 
   const findUserByEmail = (email) => {
     return _.find(currentUserContacts, ['email', email]);
+  }
+
+  const getActiveConversationID = () => {
+    const activeConversationID = document.querySelector('.chat-sidebar .list__link.active') ? document.querySelector('.chat-sidebar .list__link.active').parentElement.id : '';
   }
 
   return (
